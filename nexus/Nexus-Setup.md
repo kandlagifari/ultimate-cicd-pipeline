@@ -41,6 +41,13 @@ Then, you can run the script using:
 ./install_docker.sh
 ```
 
+Give current user permission to use docker
+
+```bash
+sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ssm-user'
+newgrp docker
+```
+
 ## Create Nexus using docker container
 
 To create a Docker container running Nexus 3 and exposing it on port 8081, you can use the following command:

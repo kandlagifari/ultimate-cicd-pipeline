@@ -10,6 +10,12 @@ sudo apt-get update
 
 ```bash
 sudo apt install docker.io -y
+sudo usermod -aG docker ssm-user
+newgrp docker
+```
+or
+```bash
+sudo apt install docker.io -y
 sudo chmod 666 /var/run/docker.sock
 ```
 

@@ -41,6 +41,13 @@ Then, you can run the script using:
 ./install_docker.sh
 ```
 
+Give current user permission to use docker
+
+```bash
+sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ssm-user'
+newgrp docker
+```
+
 ## Create Sonarqube Docker container
 To run SonarQube in a Docker container with the provided command, you can follow these steps:
 

@@ -57,7 +57,7 @@ pipeline {
         maven 'maven3'
     }
 
-    enviornment {
+    environment {
         SCANNER_HOME= tool 'sonar-scanner'
     }
 
@@ -121,7 +121,7 @@ pipeline {
             steps {
                script {
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                            sh "docker build -t adijaiswal/boardshack:latest ."
+                            sh "docker build -t kandlagifari/boardshack:latest ."
                     }
                }
             }
@@ -129,7 +129,7 @@ pipeline {
         
         stage('Docker Image Scan') {
             steps {
-                sh "trivy image --format table -o trivy-image-report.html adijaiswal/boardshack:latest "
+                sh "trivy image --format table -o trivy-image-report.html kandlagifari/boardshack:latest "
             }
         }
         
@@ -137,28 +137,29 @@ pipeline {
             steps {
                script {
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                            sh "docker push adijaiswal/boardshack:latest"
+                            sh "docker push kandlagifari/boardshack:latest"
                     }
                }
             }
         }
-        stage('Deploy To Kubernetes') {
-            steps {
-               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.8.146:6443') {
-                        sh "kubectl apply -f deployment-service.yaml"
-                }
-            }
-        }
+
+        // // Use ArgoCD
+        // stage('Deploy To Kubernetes') {
+        //     steps {
+        //        withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.8.146:6443') {
+        //                 sh "kubectl apply -f deployment-service.yaml"
+        //         }
+        //     }
+        // }
         
-        stage('Verify the Deployment') {
-            steps {
-               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.8.146:6443') {
-                        sh "kubectl get pods -n webapps"
-                        sh "kubectl get svc -n webapps"
-                }
-            }
-        }
-        
+        // stage('Verify the Deployment') {
+        //     steps {
+        //        withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.8.146:6443') {
+        //                 sh "kubectl get pods -n webapps"
+        //                 sh "kubectl get svc -n webapps"
+        //         }
+        //     }
+        // }
         
     }
     post {
